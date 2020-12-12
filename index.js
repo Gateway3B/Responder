@@ -18,7 +18,6 @@ client.on('ready', () => {
     try {
         var rawdata = fs.readFileSync('responses.json');
     } catch(err) {
-        console.log("fildsync");
         fs.writeFileSync('responses.json', '{"responses":[]}');
         var rawdata = fs.readFileSync('responses.json');
     }
