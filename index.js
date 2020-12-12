@@ -2,7 +2,12 @@ const Discord = require('discord.js');
 const dotenv = require('dotenv');
 const client = new Discord.Client();
 const fs = require('fs');
+
 var responses;
+const add = "/addresps";
+const show = "/showresps";
+const helpConst = "/help";
+const del = "/deleteresps";
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -16,17 +21,26 @@ client.on('ready', () => {
 });
 
 client.on('message', msg => {
-    if(msg.author.username != "Responder") {
-        console.log(msg.toString());
+    if(msg.author.username != 'Responder') {
+        console.log("Incoming Message: " + msg.toString());
         let message = msg.toString();
         
-        if(message.startsWith("/addresp")) {
-            addResp(message.slice(9));
+        if(message.startsWith(add)) {
+            addResp(message.slice(add.length));
+
+        } else if(message.startsWith(show)) {
+            showResps(msg);
+
+        } else if(message.startsWith(del)) {
+            deleteResp(msg.slice(del.length))
+
+        } else if(message.startsWith(helpConst)) {
+            help();
+
         } else {
-            respond(message, msg.channel);
+            respond(msg);
         }
     }
-
 });
 
 function addResp(message) {
@@ -39,14 +53,46 @@ function addResp(message) {
     fs.writeFileSync('responses.json', JSON.stringify(responses, null, 4));
 }
 
-function respond(message, channel) {   
-    var resps = responses.responses.filter(function(response) {
-        return response.trigger === message;
+function showResps(msg) {
+    var show = 'Responses\n---------------------------------';
+    responses.responses.forEach(response => {
+        var line = response.trigger + "\t\t|\t\t" + response.response;
+        show.concat('\n', line);
     });
-    resps.forEach(resp => {
-        console.log(resp.toString());
-        client.channels.get(channel.id).send(resp.response);
+    client.channels.get(msg.channel.id).send(show);
+}
+
+function help(msg) {
+    var help = 'Help\n---------------------------------';
+    help.concat('\t', '`/addresp trigger|response');
+    help.concat('\t', '`/delresp trigger');
+    help.concat('\t', '`/help');
+    help.concat('\t', '`/showresps');
+    
+    client.channels.get(msg.channel.id).send(help);
+}
+
+function delResp(msg) {
+    var response = responses.responses[msg.toString];
+    var del = 'Delete\n---------------------------------';
+    del.concat('\n', response.trigger + "\t\t|\t\t" + response.response)
+
+    client.channels.get(msg.channel.id).send(del);
+
+    delete responses.responses[msg.toString];
+    fs.writeFileSync('responses.json', JSON.stringify(responses, null, 4));
+}
+
+function respond(msg) {   
+    responses.responses.forEach(resp => {
+        console.log(resp.trigger);
+        console.log(msg.toString())
+        if(resp.trigger === msg.toString()) {
+            console.log("conrre");
+            client.channels.get(msg.channel.id).send(resp.response);
+            return;
+        }
     });
 }
 
-client.login(process.env.TOKEN);
+client.login("Nzg3MDU4MzE1NzgyNzgyOTc3.X9PbLQ.fUWa49UAodJYp08ta5_415PDs2I");
