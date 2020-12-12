@@ -90,7 +90,7 @@ function help(msg) {
     var helpLog = '`helpLog' + spacer;
     helpLog = helpLog.concat('\n', '/addresp trigger|response');
     helpLog = helpLog.concat('\n', '/delresp trigger');
-    helpLog = helpLog.concat('\n', '/helpLog');
+    helpLog = helpLog.concat('\n', '/help');
     helpLog = helpLog.concat('\n', '/showresps');
     helpLog = helpLog.concat('`');
     client.channels.get(msg.channel.id).send(helpLog);
