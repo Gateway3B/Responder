@@ -9,7 +9,6 @@ const add = "!addresp ";
 const show = "!showresps";
 const helpresp = "!helpresp";
 const del = "!delresps ";
-const spacer = "\n---------------------------------";
 
 // Response Schema
 const responseSchema = new mongoose.Schema({
@@ -122,21 +121,24 @@ async function showResps(msg) {
     await Response.find({}).then(async(resps) => {
         for(var i = 0; i < resps.length; i++) {
             const resp = resps[i];
-            trigResps += resp.trigger + ' | ' + resp.response + '\n';
+            const trigResp = resp.trigger + ' | ' + resp.response + '\n';
+            trigResps += trigResp;
 
             const channelListen = resp.channelListen ? msg.guild.channels.cache.get(resp.channelListen).name : 'N/A';
             const channelRespond =  resp.channelRespond ? msg.guild.client.channels.cache.get(resp.channelRespond).name: 'N/A';
             channels += channelListen + ' | ' + channelRespond + '\n';
             if(resp.userListen) {
                 await msg.guild.members.fetch(resp.userListen).then((member) => {
-                    console.log(member);
-                    console.log(member.displayName);
-                    console.log(users);
                     users += member.displayName + '\n';
-                    console.log(users);
-                })
+                });
             } else {
                 users += 'N/A\n';
+            }
+
+            // Add line breaks for long trigger reponse pairs to keep everything inline.
+            for(var j = 0; j < Math.floor(trigResp.length/30); j++) {
+                channels += '\n';
+                users += '\n';
             }
         }
     });
@@ -152,7 +154,7 @@ async function showResps(msg) {
         .setTitle("Responses")
         .addFields(
             { name: 'Trigger | Response', value: trigResps, inline: true },
-            { name: 'Channel Listen | Channel Respond', value: channels, inline: true },
+            { name: 'Channel Listen | Respond', value: channels, inline: true },
             { name: 'User Listen', value: users, inline: true },
         )
     msg.reply(embed);
