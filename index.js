@@ -9,7 +9,7 @@ const add = "!addresp ";
 const show = "!showresps";
 const helpresp = "!helpresp";
 const del = "!delresps ";
-const lineLength = 35;
+const lineLength = process.env.LINELENGTH;
 
 // Response Schema
 const responseSchema = new mongoose.Schema({
