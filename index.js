@@ -9,7 +9,6 @@ const add = "!addresp ";
 const show = "!showresps";
 const helpresp = "!helpresp";
 const del = "!delresps ";
-const lineLength = process.env.LINELENGTH;
 
 // Response Schema
 const responseSchema = new mongoose.Schema({
@@ -137,7 +136,7 @@ async function showResps(msg) {
             }
 
             // Add line breaks for long trigger reponse pairs to keep everything inline.
-            for(var j = 0; j < Math.floor(trigResp.length/lineLength); j++) {
+            for(var j = 0; j < Math.floor(trigResp.length/process.env.LINELENGTH); j++) {
                 channels += '\n';
                 users += '\n';
             }
