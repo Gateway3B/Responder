@@ -9,6 +9,7 @@ const add = "!addresp ";
 const show = "!showresps";
 const helpresp = "!helpresp";
 const del = "!delresps ";
+const lineLength = 35;
 
 // Response Schema
 const responseSchema = new mongoose.Schema({
@@ -69,8 +70,8 @@ async function addResp(msg) {
 
     // Create a new response from the parameters. Channels and user are verified to be propper mentions and to exist before saving as ID numbers.
     const response = new Response({
-        trigger: segments[0],
-        response: segments[1],
+        trigger: segmentsClean[0],
+        response: segmentsClean[1],
         channelListen: segments[2] && msg.guild.channels.cache.get(segments[2].slice(3, -2)) ? segments[2].slice(3, -2) : null,
         channelRespond: segments[3] && msg.guild.channels.cache.get(segments[3].slice(3, -2)) ? segments[3].slice(3, -2) : null,
         userListen: segments[4] && msg.guild.members.cache.get(segments[4].slice(4, -1)) ? segments[4].slice(4, -1) : null,
@@ -136,7 +137,7 @@ async function showResps(msg) {
             }
 
             // Add line breaks for long trigger reponse pairs to keep everything inline.
-            for(var j = 0; j < Math.floor(trigResp.length/40); j++) {
+            for(var j = 0; j < Math.floor(trigResp.length/lineLength); j++) {
                 channels += '\n';
                 users += '\n';
             }
@@ -166,7 +167,7 @@ function help(msg) {
         .setColor(0x30972D)
         .setTitle("Commands")
         .addFields( 
-            { name: '!addresp trigger|response| ?#channelListen | ?#channelRespond | ?@userListen', value: 'Add response with trigger and response and optional channelListen, channelRespond, and userListen.\nEx. !addresp When I say.|Respond With||| When sent by @userListen'},
+            { name: '!addresp trigger|response| ?#channelListen | ?#channelRespond | ?@userListen', value: 'Add response with trigger and response and optional channelListen, channelRespond, and userListen.\nEx. !addresp When I say.|Respond with||| When sent by @userListen\n Ex. !addresp When I say.|Respond with| When said in #channelListen | And respond in #channelRespond |'},
             { name: '!delresps trigger|?response', value: 'Delete all responses with trigger or trigger and optional response.'},
             { name: '!helpresp', value: 'Show this message.'},
             { name: '!showresps', value: 'Show all reponses set for this server.'},
