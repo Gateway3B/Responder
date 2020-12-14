@@ -88,7 +88,7 @@ async function addResp(msg) {
         .setTitle("Response Added")
         .addFields(
             { name: 'Trigger | Response', value: response.trigger + ' | ' + response.response, inline: true },
-            { name: 'Channel Listen | Channel Respond', value: channel, inline: true },
+            { name: 'Channel Listen | Respond', value: channel, inline: true },
             { name: 'User Listen', value: response.userListen ? segmentsClean[4].slice(3) : 'N/A', inline: true },
         );
     msg.reply(embed);
@@ -136,7 +136,7 @@ async function showResps(msg) {
             }
 
             // Add line breaks for long trigger reponse pairs to keep everything inline.
-            for(var j = 0; j < Math.floor(trigResp.length/30); j++) {
+            for(var j = 0; j < Math.floor(trigResp.length/40); j++) {
                 channels += '\n';
                 users += '\n';
             }
