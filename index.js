@@ -180,7 +180,7 @@ async function respond(msg) {
         resp.forEach((resp) => {
             var shouldRespond = true;
 
-            if(msg.channel.displayName === 'general')
+            if(msg.channel.displayName === 'general' || msg.channel.id === '216420597255634944')
                 shouldRespond = false;
 
             if(resp.userListen && resp.userListen !== msg.author.id)
