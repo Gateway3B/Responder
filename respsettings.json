@@ -1,0 +1,30 @@
+{
+    "name": "respchannels",
+    "description": "Modify channels responder.",
+    "options": [
+        {
+            "name": "add_muted_channels",
+            "description": "Text responder should respond to.",
+            "type": 7,
+            "required": false
+        },
+        {
+            "name": "remove_muted_channels",
+            "description": "Text responder should respond with.",
+            "type": 7,
+            "required": false
+        },
+        {
+            "name": "show_muted_channels",
+            "description": "Ignore capitalizations in trigger.",
+            "type": 5,
+            "required": false
+        },
+        {
+            "name": "message_listen",
+            "description": "Listen for trigger in whole message.",
+            "type": 5,
+            "required": false
+        }
+    ]
+}

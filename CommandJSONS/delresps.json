@@ -1,0 +1,18 @@
+{
+    "name": "delresps",
+    "description": "Delete all responses with trigger or trigger and optional response.",
+    "options": [
+        {
+            "name": "trigger",
+            "description": "Trigger to delete.",
+            "type": 3,
+            "required": true
+        },
+        {
+            "name": "response",
+            "description": "Response to delete.",
+            "type": 3,
+            "required": false
+        }
+    ]
+}

@@ -1,0 +1,54 @@
+{
+    "name": "addresp",
+    "description": "Add response with a trigger, and optional channelListen, channelRespond, userListen, and roleListen.",
+    "options": [
+        {
+            "name": "trigger",
+            "description": "Text responder should respond to.",
+            "type": 3,
+            "required": true
+        },
+        {
+            "name": "response",
+            "description": "Text responder should respond with.",
+            "type": 3,
+            "required": true
+        },
+        {
+            "name": "ignore_case",
+            "description": "Ignore capitalizations in trigger.",
+            "type": 5,
+            "required": false
+        },
+        {
+            "name": "message_listen",
+            "description": "Listen for trigger in whole message.",
+            "type": 5,
+            "required": false
+        },
+        {
+            "name": "user_listen",
+            "description": "User responder should listen to say the trigger. Defaults to all users.",
+            "type": 6,
+            "required": false
+        },
+        {
+            "name": "role_listen",
+            "description": "Role responder should listen to say the trigger. Defaults to all roles.",
+            "type": 8,
+            "required": false
+        },
+        {
+            "name": "channel_listen",
+            "description": "Channel responder should listen for the trigger in. Defaults to all channels.",
+            "type": 7,
+            "required": false
+        },
+        {
+            "name": "channel_respond",
+            "description": "Channel responder should respond in. Defaults to channel trigger was posted.",
+            "type": 7,
+            "required": false
+        }
+    ]
+}
