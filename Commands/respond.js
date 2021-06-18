@@ -8,8 +8,8 @@ module.exports = {
         await Response.find({}).then((resp) => {
             resp.forEach((resp) => {
                 var shouldRespond = true;
-                const message = msg.content;
-                const trigger = resp.trigger;
+                var message = msg.content;
+                var trigger = resp.trigger;
 
                 // Determine if responder should respond.
                 if(msg.channel.displayName === 'general' || msg.channel.id === '216420597255634944')

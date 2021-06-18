@@ -42,14 +42,18 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     Response = mongoose.model('Response', responseSchema, interaction.guild_id);
 
     try {
+        // Get response from appropriate interaction's execute command.
         const response = await client.commands.get(interaction.data.name).execute(interaction, Response);
-        client.api.interactions(interaction.id, interaction.token).callback.post({data: {type: 4, data: {embeds: response}}})
+        // Send response to discord.
+        client.api.interactions(interaction.id, interaction.token).callback.post({data: {type: 4, data: {embeds: response}}});
+
+        // If the interaction is interactive run the interaction function.
         if(client.commands.get(interaction.data.name).interactive) {
             client.commands.get(interaction.data.name).interaction(interaction, Response);
         }
     } catch (error) {
         console.error(error);
-        client.api.interactions(interaction.id, interaction.token).callback.post({data: {type: 4, data: {flags:64, content: `There was an error trying to execute that command!\n${error}`}}});
+        client.api.interactions(interaction.id, interaction.token).callback.post({data: {type: 4, data: {flags:64, content: `There was an error trying to execute that command. Our apologies.\n${error}`}}});
     }
 });
 
@@ -57,7 +61,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 client.on('message', msg => {
     collection(msg);
 
-    if(msg.author.username != 'Responder' && mutedChannels.indexOf(msg.channel.id) >= 0) {
+    if(msg.author.username != 'Responder') {
         client.commands.get('respond').execute(msg, Response);
     }
 });

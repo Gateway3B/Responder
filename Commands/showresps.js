@@ -1,6 +1,9 @@
 const Discord = require('discord.js');
 const client = require('./../index.js').client;
 
+// Bot Add URL:
+// https://discord.com/oauth2/authorize?client_id=787058315782782977&scope=bot&permissions=2147626048
+
 module.exports = {
     name: 'showresps',
     async execute(interaction, Response) { return displayList(interaction, Response); },
@@ -20,6 +23,10 @@ async function displayList(interaction, Response) {
     var empty = false;
 
     var details;
+
+    const checkMark = String.fromCodePoint(0x2705);
+    const crossMark = String.fromCodePoint(0x274c);
+
     await Response.find({}).then(async(resps) => {
         if(resps.length == 0)
             empty = true;
@@ -46,12 +53,12 @@ async function displayList(interaction, Response) {
 
             triggers += String.fromCodePoint(0x1F1E6 + i) + (resp.trigger.length < triggerCharLimit ? resp.trigger : resp.trigger.substring(0, triggerCharLimit) + "...") + "\n";
             responses += (resp.response.length < responseCharLimit ? resp.response : resp.response.substring(0, responseCharLimit) + "...") + "\n";
-            others += (resp.ignoreCase?"Y":"N") + "|";
-            others += (resp.messageListen?"Y":"N") + "|";
-            others += (resp.userListen?"Y":"N") + "|";
-            others += (resp.roleListen?"Y":"N") + "|";
-            others += (resp.channelListen?"Y":"N") + "|";
-            others += (resp.channelRespond?"Y":"N") + "\n";
+            others += (resp.ignoreCase?checkMark:crossMark) + "|";
+            others += (resp.messageListen?checkMark:crossMark) + "|";
+            others += (resp.userListen?checkMark:crossMark) + "|";
+            others += (resp.roleListen?checkMark:crossMark) + "|";
+            others += (resp.channelListen?checkMark:crossMark) + "|";
+            others += (resp.channelRespond?checkMark:crossMark) + "\n";
         }
     })
 
@@ -81,15 +88,33 @@ async function interactionCreate(interaction, Response) {
     const message = new Discord.Message(client, plainMessage, client.channels.cache.get(plainMessage.channel_id));
 
     await Response.find({}).then(async(resps) => {
-        for(var i = 0; i < resps.length; i++) {
+        
+        const notResponder = (reaction, user) => {
+            return user.username != 'Responder';
+        }
+        
+        const collector = message.createReactionCollector(notResponder, { time: 60000 });
+        collector.on('collect', async (reaction, user) => {
+            await reaction.users.remove(user).catch( (err) => { console.log(err); } );
+        });
+        
+        // Remove all 
+        setTimeout(() => { message.reactions.removeAll(); }, 60000);
+
+        for(var i = 0; i < resps.length; i++) {            
             const resp = resps[i];
             const emoji = String.fromCodePoint(0x1F1E6 + i);
             await message.react(emoji);
-            const filter = (reaction, user) => {
+
+
+            // Create a reaction collector for each emoji.
+            const messageChange = (reaction, user) => {
                 return reaction.emoji.name === emoji && interaction.member.user.id === user.id;
             }
-            const collector = message.createReactionCollector(filter, { time: 60000 });
-            collector.on('collect', async collected => {
+
+            const collector = message.createReactionCollector(messageChange, { time: 60000 });
+            collector.on('collect', async (reaction, user) => {
+
                 const details = new Discord.MessageEmbed()
                     .setTitle("Details")
                     .setDescription(emoji)
@@ -104,7 +129,8 @@ async function interactionCreate(interaction, Response) {
                         { name: 'Channel Listen', value: resp.channelListen?`<#${resp.channelListen}>`:"None", inline: true },
                         { name: 'Channel Respond', value: resp.channelRespond?`<#${resp.channelRespond}>`:"None", inline: true },
                         { name: 'Created By', value: resp.userCreate?`<@${resp.userCreate}>`:"None", inline: true },
-                    )
+                        );
+
                 await client.api.webhooks(client.user.id, interaction.token).messages('@original').patch({data: {embeds: [message.embeds[0], details]}});
             });
         }
