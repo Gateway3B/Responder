@@ -5,8 +5,8 @@ module.exports = {
     name: 'respond',
     async execute(msg, Response){
         // Get all documents. For each, check if the message passes all checks of userListen, channelListen, and trigger. Reply or send message to channelRespond.
-        await Response.find({}).then((resp) => {
-            resp.forEach((resp) => {
+        await Response.find({}).then(async (resp) => {
+            resp.forEach(async(resp) => {
                 var shouldRespond = true;
                 var message = msg.content;
                 var trigger = resp.trigger;
@@ -47,7 +47,7 @@ module.exports = {
                         .setTitle(resp.response);
 
                     if(resp.userCreate) {
-                        const user = client.users.cache.get(resp.userCreate);
+                        const user = await client.users.fetch(resp.userCreate);
                         embed.setFooter(`Created By: ${user.username}`);
                     }
 
