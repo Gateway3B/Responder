@@ -1,5 +1,5 @@
-const Discord = require('discord.js');
-const client = require('./../index.js').client;
+const {MessageEmbed} = require('discord.js');
+const {PrimaryColor} = require('../../config.json')
 
 module.exports = {
     name: 'respond',
@@ -42,20 +42,20 @@ module.exports = {
 
                 if(shouldRespond) {
                     // Create embed.
-                    const embed = new Discord.MessageEmbed()
-                        .setColor(0x30972D)
+                    const embed = new MessageEmbed()
+                        .setColor(PrimaryColor)
                         .setTitle(resp.response);
 
                     if(resp.userCreate) {
-                        const user = await client.users.fetch(resp.userCreate);
+                        const user = await msg.client.users.fetch(resp.userCreate);
                         embed.setFooter(`Created By: ${user.username}`);
                     }
 
                     if(resp.channelRespond) {
                         embed.setDescription(`Responding From: ${msg.channel.name}`);
-                        client.api.channels(resp.channelRespond).messages.post({data: {embed: embed}});
+                        msg.client.channels.fetch(resp.channelRespond).then(channel => channel.send({embeds: [embed]}));
                     } else {
-                        client.api.channels(msg.channel.id).messages.post({data: {embed: embed, message_reference: {message_id: msg.id}}});
+                        msg.client.channels.fetch(msg.channel.id).then(channel => channel.send({embeds: [embed], message_reference: {message_id: msg.id}}));
                     }
                 }
             });

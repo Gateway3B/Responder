@@ -4,14 +4,12 @@
   "description": "Discord bot for predetermined responses to messages.",
   "main": "index.js",
   "dependencies": {
-    "discord.js": "^12.5.1",
-    "dotenv": "^8.2.0",
+    "discord.js": "^13.3.1",
     "mongoose": "^5.11.18"
   },
-  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "test": "node src/index.js test",
+    "start": "node src/index.js"
   },
   "author": "Gateway3B",
   "constributors": [

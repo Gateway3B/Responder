@@ -1,18 +1,19 @@
-const Discord = require('discord.js');
+const {MessageEmbed} = require('discord.js');
+const {PrimaryColor} = require('../../config.json')
 
 module.exports = {
     name: 'delresps',
     async execute(interaction, Response) {
-        const options = interaction.data.options;
+        const options = interaction.options;
         // Create filter depending if there are 1 or 2 parameters.
-        const filter = options.length > 1 ? { trigger: options[0].value, response: options[1].value} : { trigger: options[0].value };
+        const filter = options.data.length > 1 ? { trigger: options.getString('trigger'), response: options.getString('response')} : { trigger: options.getString('trigger') };
         
         // Delete all documents that pass the filter.
         const num = await Response.deleteMany(filter);
 
         // Create embed.
-        const embed = new Discord.MessageEmbed()
-            .setColor(0x30972D)
+        const embed = new MessageEmbed()
+            .setColor(PrimaryColor)
             .setTitle(`${num.deletedCount} Response${num.deletedCount!=1?'s':''} Deleted`);
 
         for(var i = 0; i < options.length; i++) {
@@ -21,7 +22,7 @@ module.exports = {
             }
         }
         
-        return [embed];
+        interaction.reply({embeds: [embed]});
     }
 }
 
