@@ -12,9 +12,6 @@ module.exports = {
                 var trigger = resp.trigger;
 
                 // Determine if responder should respond.
-                if(msg.channel.displayName === 'general' || msg.channel.id === '216420597255634944')
-                    shouldRespond = false;
-                else
                 if(resp.userListen && resp.userListen !== msg.author.id)
                     shouldRespond = false;
                 else
