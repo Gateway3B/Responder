@@ -32,6 +32,7 @@ client.on('ready', () => {
     conn = mongoose.connection;
     conn.on('error', console.error.bind(console, 'connection error:'));
 
+    commandFunctions.createDelete(client);
     commandFunctions.fetchCommands(client, 'Commands');
 });
 
